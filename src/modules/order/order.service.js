@@ -1,6 +1,6 @@
 const Order = require("./order.model");
 
-const createOrder = async () => {
+const createOrder = async (req, res) => {
   try {
     const { user_id, name, products, totalPrise, address, clientPhone } =
       req.body;
@@ -12,19 +12,35 @@ const createOrder = async () => {
       address,
       clientPhone,
     });
-    return await order.save();
+    await order.save();
+
+    res.send({
+      success: true,
+      data: order,
+    });
   } catch (error) {
-    throw new Error(`Buyurtma yaratishda xatolik: ${error.message}`);
+    res.status(400).json({
+      success: false,
+      error: error.message,
+    });
   }
 };
 
-const getAllOrders = async () => {
+const getAllOrders = async (req, res) => {
   try {
-    return await Order.find()
+    const result = await Order.find()
       .populate("user_id", "name email")
       .populate("products.productId", "name price");
+
+    res.send({
+      success: true,
+      data: result,
+    });
   } catch (error) {
-    throw new Error(`Buyurtmalarni olishda xatolik: ${error.message}`);
+    res.status(400).json({
+      success: false,
+      error: error.message,
+    });
   }
 };
 

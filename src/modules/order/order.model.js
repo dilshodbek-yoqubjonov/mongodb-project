@@ -15,7 +15,7 @@ const orderSchema = new Schema(
     clientPhone: { type: Number, required: true },
   },
   {
-    collation: "orders",
+    collection: "orders",
   }
 );
 
