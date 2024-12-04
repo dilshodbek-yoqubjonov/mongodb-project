@@ -15,7 +15,7 @@ const register = async (req, res) => {
 
     res.send(user);
   } catch (error) {
-    res.send({ error: error.message });
+    res.status(error.status || 403).send({ error: error.message });
   }
 };
 
@@ -38,7 +38,7 @@ const login = async (req, res) => {
       });
     }
   } catch (error) {
-    res.send({ error: error.message });
+    res.status(error.status || 403).send({ error: error.message });
   }
 };
 

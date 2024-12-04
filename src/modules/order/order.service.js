@@ -20,7 +20,7 @@ const createOrder = async (req, res) => {
       data: order,
     });
   } catch (error) {
-    res.status(400).json({
+    res.status(error.status || 400).json({
       success: false,
       error: error.message,
     });
@@ -111,7 +111,7 @@ const getAllOrders = async (req, res) => {
       data: result,
     });
   } catch (error) {
-    res.status(400).json({
+    res.status(error.status || 400).json({
       success: false,
       error: error.message,
     });

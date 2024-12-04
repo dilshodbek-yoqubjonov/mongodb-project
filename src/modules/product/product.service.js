@@ -32,7 +32,7 @@ const createProduct = async (req, res) => {
     });
   } catch (error) {
     console.error("Create product error:", error);
-    res.status(400).json({
+    res.status(error.status || 400).json({
       success: false,
       error: error.message,
     });
@@ -68,7 +68,7 @@ const getAllProducts = async (req, res) => {
       data: products,
     });
   } catch (error) {
-    res.status(400).json({
+    res.status(error.status || 400).json({
       success: false,
       error: error.message,
     });

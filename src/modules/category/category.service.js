@@ -56,7 +56,9 @@ const getAllCategory = async (req, res) => {
       data: data,
     });
   } catch (error) {
-    res.send({ success: false, message: error.message });
+    res
+      .status(error.status || 403)
+      .send({ success: false, message: error.message });
   }
 };
 
