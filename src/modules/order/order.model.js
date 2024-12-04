@@ -10,7 +10,6 @@ const orderSchema = new Schema(
         quantity: { type: Number, required: true },
       },
     ],
-    totalPrise: { type: Number, required: true },
     address: { type: String, required: true },
     clientPhone: { type: Number, required: true },
   },

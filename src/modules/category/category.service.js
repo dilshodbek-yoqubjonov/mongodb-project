@@ -26,10 +26,30 @@ const createCategory = async (req, res) => {
 
 const getAllCategory = async (req, res) => {
   try {
-    const data = await categoryModel.find().populate({
-      path: "products",
-      select: "name description price quantity"
-    });
+    const data = await categoryModel.aggregate([
+      {
+        $lookup: {
+          from: "products",
+          localField: "products",
+          foreignField: "_id",
+          as: "productDetails",
+          pipeline: [
+            {
+              $project: {
+                _id: 0,
+                name: 1,
+                description: 1,
+                price: 1,
+                quantity: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: "$productDetails",
+      },
+    ]);
 
     res.status(200).json({
       success: true,

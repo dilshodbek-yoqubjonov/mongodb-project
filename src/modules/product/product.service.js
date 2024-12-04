@@ -41,10 +41,27 @@ const createProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate({
-      path: "category",
-      select: "name",
-    });
+    const products = await Product.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "categoryDetails",
+          pipeline: [
+            {
+              $project: {
+                _id: 0,
+                name: 1,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $unwind: "$categoryDetails",
+      },
+    ]);
 
     res.status(200).json({
       success: true,
@@ -58,7 +75,6 @@ const getAllProducts = async (req, res) => {
   }
 };
 
-// Bitta m
 module.exports = {
   createProduct,
   getAllProducts,
