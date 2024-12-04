@@ -1,23 +1,40 @@
 const Product = require("./product.model");
+const Category = require("../category/category.model");
 
 const createProduct = async (req, res) => {
   try {
-    const { name, price, description, categoryId, quantity } = req.body;
+    const { name, price, description, category, quantity } = req.body;
 
+    // Category mavjudligini tekshiramiz
+    const existingCategory = await Category.findById(category);
+    if (!existingCategory) {
+      return res.status(404).json({
+        success: false,
+        message: "Category not found",
+      });
+    }
+
+    // Product yaratamiz
     const product = await Product.create({
       name,
       price,
       description,
-      categoryId,
+      category,
       quantity,
+    });
+
+    // Yaratilgan productni categoryga qo'shamiz
+    await Category.findByIdAndUpdate(category, {
+      $push: { products: product._id },
     });
 
     res.status(201).json({
       success: true,
+      message: "Product successfully created",
       data: product,
-      message: "Mahsulot muvaffaqiyatli yaratildi",
     });
   } catch (error) {
+    console.error("Create product error:", error);
     res.status(400).json({
       success: false,
       error: error.message,

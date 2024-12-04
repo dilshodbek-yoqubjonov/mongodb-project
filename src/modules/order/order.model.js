@@ -2,7 +2,6 @@ const { Schema, Types, model, default: mongoose } = require("mongoose");
 
 const orderSchema = new Schema(
   {
-    id: { type: Types.ObjectId },
     user_id: { type: Types.ObjectId, ref: "Users", required: true },
     name: { type: String, required: true },
     products: [
